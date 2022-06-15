@@ -1,10 +1,12 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import logger from 'morgan';
 import createError from 'http-errors';
 
 import Router from '@/common/router';
+import { NAME, VERSION, PORT, NODE_ENV } from './config';
+import server from './graphql';
 
 export default class Server {
 	app: Express;
@@ -13,20 +15,11 @@ export default class Server {
 	port: number;
 
 	constructor() {
-		dotenv.config();
-
-		const { NAME, VERSION, PORT } = process.env;
-
 		this.name = NAME ?? 'graphql-server';
 		this.version = VERSION ?? '0.1.0';
 		this.port = parseInt(PORT ?? '80');
 
 		this.app = express();
-
-		this.app.use(helmet());
-		this.app.use(logger('dev'));
-		this.app.use(express.json());
-		this.app.use(express.urlencoded({ extended: true }));
 	}
 
 	public apply(...args: Router[]): Server {
@@ -59,7 +52,27 @@ export default class Server {
 		return await this.listen();
 	}
 
+	protected init() {
+		this.app.enable('trust proxy');
+		this.app.use(helmet());
+		this.app.use(logger('dev'));
+		this.app.use(express.json());
+		this.app.use(express.urlencoded({ extended: true }));
+
+		if (NODE_ENV !== 'production') return;
+
+		this.app.use(
+			rateLimit({
+				windowMs: 15 * 60 * 1000, // 15 minutes
+				max: 100, // limit each IP to 100 requests per windowMs
+			})
+		);
+	}
+
 	protected beforeListen() {
+		// graphql
+		server.applyMiddleware({ app: this.app, path: '/graphql' });
+
 		// 404 error
 		this.app.use((req: Request, res: Response, next: NextFunction) => {
 			next(
