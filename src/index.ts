@@ -1,17 +1,13 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import 'module-alias/register';
+import { commonRouter } from '@/core/common.router';
+import Server from '@/server/www';
 
-dotenv.config();
-
-const app: Express = express();
-const port = process.env.PORT;
-
-app.get('/status', (req: Request, res: Response) => {
-	res.send('Express is running');
-});
-
-app.listen(port, () => {
-	console.log(
-		`⚡️[server]: Server is running at https://localhost:${port}`
-	);
-});
+new Server()
+	.apply(commonRouter)
+	.bootstrap()
+	.then(() => console.log('Server is ready.'))
+	.catch(err => {
+		console.error('Server failed to start...');
+		console.error(err);
+		process.exit(1);
+	});

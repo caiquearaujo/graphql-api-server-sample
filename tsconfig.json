@@ -11,6 +11,7 @@
 		"baseUrl": ".",
 		"declaration": true,
 		"outDir": "./build",
+		"resolveJsonModule": true,
 		"paths": {
 			"@/*": [
 				"src/*",
