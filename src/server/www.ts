@@ -31,10 +31,13 @@ export default class Server {
 	}
 
 	public listen(): Promise<Express> {
-		this.beforeListen();
-
-		return new Promise((res, rej) => {
+		return new Promise(async (res, rej) => {
 			try {
+				await server.start();
+				server.applyMiddleware({ app: this.app, path: '/graphql' });
+
+				this.catchErrors();
+
 				this.app.listen(this.port, () => {
 					console.log(
 						`⚡️[server]: Server is running at http://localhost:${this.port}`
@@ -69,10 +72,7 @@ export default class Server {
 		);
 	}
 
-	protected beforeListen() {
-		// graphql
-		server.applyMiddleware({ app: this.app, path: '/graphql' });
-
+	protected catchErrors() {
 		// 404 error
 		this.app.use((req: Request, res: Response, next: NextFunction) => {
 			next(
