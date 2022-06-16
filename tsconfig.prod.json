@@ -3,8 +3,7 @@
 		"target": "esnext",
 		"module": "commonjs",
 		"strict": true,
-		"declaration": true,
-		"declarationDir": "./build/types",
+		"declaration": false,
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 		"importHelpers": true,
@@ -22,9 +21,6 @@
 			"@/*": [
 				"src/*",
 			],
-			"@test/*": [
-				"./test/*"
-			]
 		},
 		"plugins": [
 			{
@@ -45,12 +41,12 @@
 		],
 	},
 	"include": [
-		"./src/**/*",
-		"./test/**/*"
+		"./src/**/*"
 	],
 	"exclude": [
 		"./node_modules/**/*",
 		"./dist/**/*",
-		"./build/**/*"
+		"./build/**/*",
+		"./test/**/*"
 	]
 }
