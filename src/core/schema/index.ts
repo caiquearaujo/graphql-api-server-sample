@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import MovieQueries from './movies/MovieQueries';
+import MovieQueries from './movies/movie.queries';
 
 const schema = new GraphQLSchema({
 	query: new GraphQLObjectType({

@@ -5,7 +5,7 @@ describe('Movies => Repo', () => {
 	it('getAll => Array of movies', async () => {
 		const res = await MoviesRepo.getAll();
 
-		expect(res.length).not.toBe(0);
+		expect(res.length).toBe(movies.length);
 
 		expect(typeof res[0].id).toBe('number');
 		expect(typeof res[0].title).toBe('string');
