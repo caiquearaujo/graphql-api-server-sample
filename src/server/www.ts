@@ -111,22 +111,6 @@ export class ApiServer {
 			}
 		);
 	}
-
-	protected listen(): Promise<http.Server> {
-		return new Promise(async (res, rej) => {
-			try {
-				const httpServer = this.app.listen(this.port, () => {
-					console.log(
-						`⚡️[server]: Server is running at http://localhost:${this.port}`
-					);
-				});
-
-				res(httpServer);
-			} catch (err) {
-				rej(err);
-			}
-		});
-	}
 }
 
 export class Server {
