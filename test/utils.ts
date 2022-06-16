@@ -6,6 +6,7 @@ import request from 'supertest';
 export class ApiHelper {
 	api: ApiServer;
 	server: Server | undefined;
+	bootstrapped: boolean = false;
 
 	constructor() {
 		this.api = new ApiServer({
@@ -17,7 +18,10 @@ export class ApiHelper {
 	}
 
 	public async bootstrap() {
+		if (this.bootstrapped) return;
+
 		this.server = await this.api.bootstrap();
+		this.bootstrapped = true;
 	}
 
 	public async open(): Promise<request.SuperTest<request.Test>> {

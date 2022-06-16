@@ -35,6 +35,7 @@ module.exports = {
 		'@test/(.*)': '<rootDir>/test/$1',
 	},
 	moduleDirectories: ['node_modules', '<rootDir>/src'],
-	setupFiles: ['dotenv/config'],
+	setupFiles: ['<rootDir>/src/server/config.ts'],
+	setupFilesAfterEnv: ['<rootDir>/test/global.ts'],
 	extensionsToTreatAsEsm: ['.ts'],
 };

@@ -21,8 +21,8 @@
 		"postversion": "git push && git push --tags",
 		"prepublishOnly": "npm test && npm run lint",
 		"preversion": "npm run lint",
-		"test": "jest",
-		"test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+		"test": "cross-env NODE_ENV=test jest",
+		"test:debug": "cross-env NODE_ENV=test node --inspect ./node_modules/.bin/jest --runInBand"
 	},
 	"main": "index.js",
 	"private": true,
@@ -63,6 +63,7 @@
 		"@typescript-eslint/parser": "^5.28.0",
 		"@zerollup/ts-transform-paths": "^1.7.18",
 		"concurrently": "^7.2.2",
+		"cross-env": "^7.0.3",
 		"eslint": "^8.17.0",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-prettier": "^8.5.0",
