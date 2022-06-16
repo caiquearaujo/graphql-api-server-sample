@@ -1,58 +1,68 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
+
+import http from 'http';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import logger from 'morgan';
 import createError from 'http-errors';
 
-import Router from '@/common/router';
 import { NAME, VERSION, PORT, NODE_ENV } from './config';
-import server from './graphql';
+import GraphQLServer from './graphql';
+import { Routering } from './router';
 
-export default class Server {
+export type ApiServerOptions = {
+	graphql: {
+		path: string;
+	};
+	router: Routering;
+};
+
+export class ApiServer {
 	app: Express;
+	http: http.Server | undefined;
+	graphql: GraphQLServer;
+	router: Routering;
+
 	name: string;
 	version: string;
 	port: number;
 
-	constructor() {
+	constructor(options: ApiServerOptions) {
 		this.name = NAME ?? 'graphql-server';
 		this.version = VERSION ?? '0.1.0';
 		this.port = parseInt(PORT ?? '80');
 
 		this.app = express();
+		this.graphql = new GraphQLServer(options.graphql.path);
+		this.router = options.router;
 	}
 
-	public apply(...args: Router[]): Server {
-		for (let router of args) {
-			router.apply(this.app);
-		}
+	// public async start() {
+	// 	this.http = await this.listen();
+	// }
 
-		return this;
-	}
+	// public async restart() {
+	// 	await this.stop();
+	// 	await this.start();
+	// }
 
-	public listen(): Promise<Express> {
-		return new Promise(async (res, rej) => {
-			try {
-				await server.start();
-				server.applyMiddleware({ app: this.app, path: '/graphql' });
+	// public async stop() {
+	// 	await new Promise<void>(res => {
+	// 		if (!this.http) return res();
+	// 		this.http.close(() => res());
+	// 	});
 
-				this.catchErrors();
+	// 	this.http = undefined;
+	// }
 
-				this.app.listen(this.port, () => {
-					console.log(
-						`⚡️[server]: Server is running at http://localhost:${this.port}`
-					);
+	// public isRunning(): boolean {
+	// 	return this.http !== undefined;
+	// }
 
-					res(this.app);
-				});
-			} catch (err) {
-				rej(err);
-			}
-		});
-	}
-
-	public async bootstrap(): Promise<Express> {
-		return await this.listen();
+	public async bootstrap(): Promise<Server> {
+		await this.graphql.start(this.app);
+		this.init();
+		return new Server(this.app);
 	}
 
 	protected init() {
@@ -62,17 +72,18 @@ export default class Server {
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
 
-		if (NODE_ENV !== 'production') return;
+		if (NODE_ENV === 'production') {
+			this.app.use(
+				rateLimit({
+					windowMs: 15 * 60 * 1000, // 15 minutes
+					max: 100, // limit each IP to 100 requests per windowMs
+				})
+			);
+		}
 
-		this.app.use(
-			rateLimit({
-				windowMs: 15 * 60 * 1000, // 15 minutes
-				max: 100, // limit each IP to 100 requests per windowMs
-			})
-		);
-	}
+		this.router.apply(this.app);
+		this.app.use(this.graphql.middleware());
 
-	protected catchErrors() {
 		// 404 error
 		this.app.use((req: Request, res: Response, next: NextFunction) => {
 			next(
@@ -99,5 +110,76 @@ export default class Server {
 				});
 			}
 		);
+	}
+
+	protected listen(): Promise<http.Server> {
+		return new Promise(async (res, rej) => {
+			try {
+				const httpServer = this.app.listen(this.port, () => {
+					console.log(
+						`⚡️[server]: Server is running at http://localhost:${this.port}`
+					);
+				});
+
+				res(httpServer);
+			} catch (err) {
+				rej(err);
+			}
+		});
+	}
+}
+
+export class Server {
+	app: Express;
+	http: http.Server | undefined;
+
+	port: number;
+
+	constructor(app: Express) {
+		this.port = parseInt(PORT ?? '80');
+
+		this.app = app;
+	}
+
+	public async start() {
+		this.http = await this.listen();
+	}
+
+	public async restart() {
+		await this.stop();
+		await this.start();
+	}
+
+	public async stop() {
+		await new Promise<void>(res => {
+			if (!this.http) return res();
+			this.http.close(() => res());
+		});
+
+		this.http = undefined;
+	}
+
+	public httpServer(): http.Server | undefined {
+		return this.http;
+	}
+
+	public isRunning(): boolean {
+		return this.http !== undefined;
+	}
+
+	protected listen(): Promise<http.Server> {
+		return new Promise(async (res, rej) => {
+			try {
+				const httpServer = this.app.listen(this.port, () => {
+					console.log(
+						`⚡️[server]: Server is running at http://localhost:${this.port}`
+					);
+				});
+
+				res(httpServer);
+			} catch (err) {
+				rej(err);
+			}
+		});
 	}
 }

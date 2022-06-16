@@ -1,5 +1,5 @@
 import { Express, Request, Response, NextFunction } from 'express';
-import Router from '@/common/router';
+import { Router } from '@/server/router';
 
 class CommonRouter extends Router {
 	apply(app: Express): void {

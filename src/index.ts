@@ -1,13 +1,27 @@
 import 'module-alias/register';
 import { commonRouter } from '@/core/common.router';
-import Server from '@/server/www';
+import { ApiServer } from '@/server/www';
+import { Routering } from './server/router';
 
-new Server()
-	.apply(commonRouter)
+new ApiServer({
+	router: new Routering(commonRouter),
+	graphql: {
+		path: '/graphql',
+	},
+})
 	.bootstrap()
-	.then(() => console.log('Server is ready.'))
+	.then(server =>
+		server
+			.start()
+			.then(() => console.log(`⚡️ Server is ready.`))
+			.catch(err => {
+				console.error('❌ Server failed to start...');
+				console.error(err);
+				process.exit(1);
+			})
+	)
 	.catch(err => {
-		console.error('Server failed to start...');
+		console.error('❌ Server failed to start...');
 		console.error(err);
 		process.exit(1);
 	});

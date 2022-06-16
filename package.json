@@ -10,8 +10,8 @@
 	"scripts": {
 		"ts:check": "tsc --noEmit",
 		"ts:check-watch": "npm run ts:check -- --watch",
-		"ts:build": "tsc --emitDeclarationOnly",
-		"ts:watch": "tsc --watch",
+		"ts:build": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"ts:watch": "tsc -p tsconfig.build.json --watch",
 		"js:watch": "nodemon -q build/index.js",
 		"dev": "concurrently \"npm:ts:watch\" \"npm:js:watch\"",
 		"lint": "eslint --ext .ts,.js --ignore-path .gitignore --fix src",

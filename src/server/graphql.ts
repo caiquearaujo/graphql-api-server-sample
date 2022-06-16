@@ -1,37 +1,57 @@
 import { ApolloServer } from 'apollo-server-express';
-import { GraphQLError } from 'graphql';
+import { Express, Router } from 'express';
 
 import depthLimit from 'graphql-depth-limit';
-import queryComplexity, { simpleEstimator } from 'graphql-query-complexity';
 
+import graphqlComplexity from '@/config/graphql-complexity';
 import schema from '@/core/schema';
 import { NODE_ENV } from './config';
 
-const complexity = queryComplexity({
-	maximumComplexity: 1000,
-	variables: {},
-	createError: (max: number, actual: number) =>
-		new GraphQLError(
-			`Query is too complex: ${actual}. Maximum allowed complexity: ${max}`
-		),
-	estimators: [
-		simpleEstimator({
-			defaultComplexity: 1,
-		}),
-	],
-});
+export default class GraphQLServer {
+	protected graphql: ApolloServer;
+	protected path: string;
+	protected running: boolean = false;
 
-const server = new ApolloServer({
-	schema,
-	introspection: NODE_ENV !== 'production',
-	validationRules: [depthLimit(7), complexity],
-	formatError: (err): Error => {
-		if (err.message.startsWith('Database Error: ')) {
-			return new Error('Internal server error');
-		}
+	constructor(path = '/graphql') {
+		this.path = path;
 
-		return err;
-	},
-});
+		this.graphql = new ApolloServer({
+			schema,
+			introspection: NODE_ENV !== 'production',
+			validationRules: [depthLimit(7), graphqlComplexity],
+			formatError: (err): Error => {
+				if (err.message.startsWith('Database Error: ')) {
+					return new Error('Internal server error');
+				}
 
-export default server;
+				return err;
+			},
+		});
+	}
+
+	public async start(app: Express) {
+		await this.graphql.start();
+		this.running = true;
+	}
+
+	public async restart() {
+		await this.graphql.stop();
+		await this.graphql.start();
+	}
+
+	public async stop() {
+		if (!this.running) return;
+
+		await this.graphql.stop();
+		this.running = false;
+	}
+
+	public isRunning(): boolean {
+		return this.running;
+	}
+
+	public middleware(): Router {
+		if (!this.running) throw new Error('GraphQL Server must be running');
+		return this.graphql.getMiddleware({ path: this.path });
+	}
+}
