@@ -17,4 +17,8 @@ export default class MoviesRepo {
 			}, 500);
 		});
 	}
+
+	static create(input: Omit<TMovie, 'id'>): Promise<TMovie> {}
+
+	static createMany(input: Array<Omit<TMovie, 'id'>>): Promise<TMovies> {}
 }

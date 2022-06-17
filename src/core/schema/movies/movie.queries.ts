@@ -1,16 +1,16 @@
 import MoviesRepo from '@/core/repo/movies.repo';
 import { GraphQLInt, GraphQLList, GraphQLNonNull } from 'graphql';
-import Movie from './movie.type';
+import { MovieType } from './movie.types';
 
 const MovieQueries = {
 	getAllMovies: {
-		type: new GraphQLList(new GraphQLNonNull(Movie)),
+		type: new GraphQLList(new GraphQLNonNull(MovieType)),
 		resolve: (_source: any, args: any) => {
 			return MoviesRepo.getAll();
 		},
 	},
 	getMovie: {
-		type: Movie,
+		type: MovieType,
 		args: {
 			id: {
 				type: new GraphQLNonNull(GraphQLInt),

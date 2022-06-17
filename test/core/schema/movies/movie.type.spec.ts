@@ -1,4 +1,4 @@
-import MovieType from '@/core/schema/movies/movie.type';
+import { MovieType } from '@/core/schema/movies/movie.types';
 
 import {
 	GraphQLBoolean,

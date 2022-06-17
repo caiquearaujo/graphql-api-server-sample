@@ -1,5 +1,5 @@
 import MovieQueries from '@/core/schema/movies/movie.queries';
-import MovieType from '@/core/schema/movies/movie.type';
+import { MovieType } from '@/core/schema/movies/movie.types';
 import movies from '@/data/movies';
 import { GraphQLInt, GraphQLList, GraphQLNonNull } from 'graphql';
 

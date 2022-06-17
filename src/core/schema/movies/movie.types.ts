@@ -9,7 +9,29 @@ import {
 	GraphQLString,
 } from 'graphql';
 
-const Movie = new GraphQLObjectType({
+const CreateMovieType = new GraphQLObjectType({
+	name: 'CreateMovie',
+	description: 'Create movie type definition',
+	fields: () => ({
+		movie: {
+			type: new GraphQLNonNull(MovieType),
+		},
+	}),
+});
+
+const CreateMoviesType = new GraphQLObjectType({
+	name: 'CreateMovies',
+	description: 'Create movie type definition',
+	fields: () => ({
+		movie: {
+			type: new GraphQLNonNull(
+				new GraphQLList(new GraphQLNonNull(MovieType))
+			),
+		},
+	}),
+});
+
+const MovieType = new GraphQLObjectType({
 	name: 'Movie',
 	description: 'Movie type definition',
 	fields: () => ({
@@ -31,4 +53,4 @@ const Movie = new GraphQLObjectType({
 	}),
 });
 
-export default Movie;
+export { CreateMovieType, CreateMoviesType, MovieType };
