@@ -24,18 +24,10 @@ export class ApiHelper {
 		this.bootstrapped = true;
 	}
 
-	public async open(): Promise<request.SuperTest<request.Test>> {
+	public get(): request.SuperTest<request.Test> {
 		if (!this.server)
 			throw new Error('You must bootstrap ApiHelper first.');
 
-		await this.server.restart();
-		return request(this.server.httpServer());
-	}
-
-	public async close(): Promise<void> {
-		if (!this.server)
-			throw new Error('You must bootstrap ApiHelper first.');
-
-		await this.server.stop();
+		return request(this.server.app);
 	}
 }

@@ -7,11 +7,7 @@ let requestMock: request.SuperTest<request.Test>;
 
 beforeAll(async () => {
 	await server.bootstrap();
-	requestMock = await server.open();
-});
-
-afterAll(async () => {
-	await server.close();
+	requestMock = server.get();
 });
 
 describe('GraphQL types integrity', () => {
