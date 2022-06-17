@@ -28,7 +28,7 @@ const MovieMutations = {
 		},
 		resolve: async (_source: any, { input }: any) => {
 			return {
-				movie: await MoviesRepo.createMany(input),
+				movies: await MoviesRepo.createMany(input),
 			};
 		},
 	},

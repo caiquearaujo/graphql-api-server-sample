@@ -24,7 +24,7 @@ const CreateMoviesType = new GraphQLObjectType({
 	name: 'CreateMovies',
 	description: 'Create movie type definition',
 	fields: () => ({
-		movie: {
+		movies: {
 			type: new GraphQLNonNull(
 				new GraphQLList(new GraphQLNonNull(MovieType))
 			),

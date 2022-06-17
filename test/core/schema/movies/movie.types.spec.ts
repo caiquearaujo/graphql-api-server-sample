@@ -1,4 +1,9 @@
-import { MovieType } from '@/core/schema/movies/movie.types';
+import DateType from '@/core/schema/custom/date.type';
+import {
+	CreateMoviesType,
+	CreateMovieType,
+	MovieType,
+} from '@/core/schema/movies/movie.types';
 
 import {
 	GraphQLBoolean,
@@ -12,6 +17,8 @@ import {
 
 describe('Movies => GraphQL Type', () => {
 	it('fields integrity', () => {
+		expect(MovieType.name).toBe('Movie');
+
 		const fields = MovieType.getFields();
 
 		expect(fields).toHaveProperty('vote_count');
@@ -65,10 +72,34 @@ describe('Movies => GraphQL Type', () => {
 
 		expect(fields).toHaveProperty('release_date');
 		expect(fields.release_date.type).toMatchObject(
-			new GraphQLNonNull(GraphQLString)
+			new GraphQLNonNull(DateType)
 		);
 
 		expect(fields).toHaveProperty('most_popular');
 		expect(fields.most_popular.type).toMatchObject(GraphQLBoolean);
+	});
+});
+
+describe('Create Movies => Graphql Type', () => {
+	it('create movie type - fields integrity', () => {
+		expect(CreateMovieType.name).toBe('CreateMovie');
+
+		const fields = CreateMovieType.getFields();
+
+		expect(fields).toHaveProperty('movie');
+		expect(fields.movie.type).toMatchObject(
+			new GraphQLNonNull(MovieType)
+		);
+	});
+
+	it('create movies type - fields integrity', () => {
+		expect(CreateMoviesType.name).toBe('CreateMovies');
+
+		const fields = CreateMoviesType.getFields();
+
+		expect(fields).toHaveProperty('movies');
+		expect(fields.movies.type).toMatchObject(
+			new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(MovieType)))
+		);
 	});
 });
