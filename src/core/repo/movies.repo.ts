@@ -19,7 +19,7 @@ export default class MoviesRepo {
 		});
 	}
 
-	static create(input: Omit<TMovie, 'id'>): Promise<TMovie> {
+	static create(input: Partial<Omit<TMovie, 'id'>>): Promise<TMovie> {
 		const movie = MoviesRepo._create(input);
 		movies.push(movie);
 
@@ -30,7 +30,9 @@ export default class MoviesRepo {
 		});
 	}
 
-	static createMany(input: Array<Omit<TMovie, 'id'>>): Promise<TMovies> {
+	static createMany(
+		input: Array<Partial<Omit<TMovie, 'id'>>>
+	): Promise<TMovies> {
 		const added = input.map(i => {
 			const movie = MoviesRepo._create(i);
 			movies.push(movie);
@@ -45,20 +47,20 @@ export default class MoviesRepo {
 		});
 	}
 
-	protected static _create(input: Omit<TMovie, 'id'>): TMovie {
-		const defaults = {
+	protected static _create(input: Partial<Omit<TMovie, 'id'>>): TMovie {
+		const defaults: Partial<TMovie> = {
 			id: uuidv4(),
 			vote_count: 0,
 			video: false,
 			vote_average: 0,
-			popularity: 0,
 			poster_path: null,
+			popularity: 0,
 			genre_ids: [],
 			backdrop_path: null,
 			adult: false,
 			most_popular: false,
 		};
 
-		return { ...defaults, ...input };
+		return { ...defaults, ...input } as TMovie;
 	}
 }

@@ -5,11 +5,11 @@ export type TMovie = {
 	vote_average: number;
 	title: string;
 	popularity: number;
-	poster_path: string;
+	poster_path: string | null;
 	original_language: string;
 	original_title: string;
 	genre_ids: Array<number>;
-	backdrop_path: string;
+	backdrop_path: string | null;
 	adult: boolean;
 	overview: string;
 	release_date: string;
