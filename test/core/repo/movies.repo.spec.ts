@@ -20,7 +20,7 @@ describe('Movies => Repo', () => {
 	});
 
 	it('getById => Movie not found', async () => {
-		const res = await MoviesRepo.getById(-1);
+		const res = await MoviesRepo.getById('unknown');
 
 		expect(res).toBeUndefined();
 	});

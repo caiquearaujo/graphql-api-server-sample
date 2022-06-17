@@ -43,7 +43,10 @@ describe('Movies => GraphQL Type', () => {
 	});
 
 	it('query getMovie not found', async () => {
-		const res = await MovieQueries.getMovie.resolve({}, { id: -1 });
+		const res = await MovieQueries.getMovie.resolve(
+			{},
+			{ id: 'unknown' }
+		);
 
 		expect(res).toBeUndefined();
 	});

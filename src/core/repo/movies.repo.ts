@@ -10,7 +10,7 @@ export default class MoviesRepo {
 		});
 	}
 
-	static getById(id: number): Promise<TMovie | undefined> {
+	static getById(id: string): Promise<TMovie | undefined> {
 		return new Promise(res => {
 			setTimeout(() => {
 				res(movies.find(m => m.id === id));

@@ -1,6 +1,6 @@
 export type TMovie = {
 	vote_count: number;
-	id: number;
+	id: string;
 	video: false;
 	vote_average: number;
 	title: string;
