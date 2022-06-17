@@ -135,6 +135,7 @@ export class Server {
 	}
 
 	public async stop() {
+		console.log('Stopping server');
 		await new Promise<void>(res => {
 			if (!this.http) return res();
 			this.http.close(() => res());

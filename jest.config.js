@@ -38,4 +38,5 @@ module.exports = {
 	setupFiles: ['<rootDir>/src/server/config.ts'],
 	setupFilesAfterEnv: ['<rootDir>/test/global.ts'],
 	extensionsToTreatAsEsm: ['.ts'],
+	maxWorkers: 1,
 };

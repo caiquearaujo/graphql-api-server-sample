@@ -14,7 +14,7 @@ afterAll(async () => {
 	await server.close();
 });
 
-describe('GraphQL integrity types', () => {
+describe('GraphQL types integrity', () => {
 	it('Query types', async () => {
 		const { body } = await requestMock.post('/graphql').send({
 			query: `
