@@ -19,4 +19,5 @@ const DateType = new GraphQLScalarType({
 	parseLiteral: ({ value }: any) => parse(value),
 });
 
+export { parse };
 export default DateType;
