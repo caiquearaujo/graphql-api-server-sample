@@ -33,3 +33,5 @@ const MovieMutations = {
 		},
 	},
 };
+
+export default MovieMutations;

@@ -1,4 +1,5 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import MovieMutations from './movies/movie.mutations';
 import MovieQueries from './movies/movie.queries';
 
 const schema = new GraphQLSchema({
@@ -6,6 +7,12 @@ const schema = new GraphQLSchema({
 		name: 'Query',
 		fields: () => ({
 			...MovieQueries,
+		}),
+	}),
+	mutation: new GraphQLObjectType({
+		name: 'Mutation',
+		fields: () => ({
+			...MovieMutations,
 		}),
 	}),
 });

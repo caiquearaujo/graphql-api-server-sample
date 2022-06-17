@@ -7,6 +7,7 @@ import {
 	GraphQLNonNull,
 	GraphQLString,
 } from 'graphql';
+import DateType from '../custom/date.type';
 
 const CreateMovieInputType = new GraphQLInputObjectType({
 	name: 'CreateMovieInput',
@@ -24,7 +25,7 @@ const CreateMovieInputType = new GraphQLInputObjectType({
 		backdrop_path: { type: GraphQLString },
 		adult: { type: GraphQLBoolean },
 		overview: { type: new GraphQLNonNull(GraphQLString) },
-		release_date: { type: new GraphQLNonNull(GraphQLString) },
+		release_date: { type: new GraphQLNonNull(DateType) },
 		most_popular: { type: GraphQLBoolean },
 	}),
 });
