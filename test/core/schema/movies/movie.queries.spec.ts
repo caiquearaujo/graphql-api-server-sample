@@ -1,7 +1,7 @@
 import MovieQueries from '@/core/schema/movies/movie.queries';
 import { MovieType } from '@/core/schema/movies/movie.types';
 import movies from '@/data/movies';
-import { GraphQLInt, GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull } from 'graphql';
 
 describe('Movies => GraphQL Type', () => {
 	it('query integrity', () => {
@@ -23,7 +23,7 @@ describe('Movies => GraphQL Type', () => {
 		expect(MovieQueries.getMovie.type).toMatchObject(MovieType);
 		expect(MovieQueries.getMovie.args).toStrictEqual({
 			id: {
-				type: new GraphQLNonNull(GraphQLInt),
+				type: new GraphQLNonNull(GraphQLID),
 			},
 		});
 		expect(typeof MovieQueries.getMovie.resolve).toBe('function');

@@ -40,7 +40,7 @@ describe('GraphQL queries', () => {
 		const { body } = await requestMock.post('/graphql').send({
 			query: `
 				{
-					getMovie(id: ${movie.id}) {
+					getMovie(id: "${movie.id}") {
 						vote_count
 						id
 						video
@@ -55,6 +55,7 @@ describe('GraphQL queries', () => {
 						adult
 						overview
 						release_date
+						most_popular
 					}
 				}`,
 		});

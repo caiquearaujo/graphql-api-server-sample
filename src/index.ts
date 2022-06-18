@@ -1,7 +1,7 @@
 import 'module-alias/register';
 import { commonRouter } from '@/core/common.router';
 import { ApiServer } from '@/server/www';
-import { Routering } from './server/router';
+import { Routering } from '@/server/router';
 
 new ApiServer({
 	router: new Routering(commonRouter),

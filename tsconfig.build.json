@@ -15,7 +15,7 @@
 		"allowJs": false,
 		"resolveJsonModule": true,
 		"baseUrl": ".",
-		"rootDir": ".",
+		"rootDir": "./src",
 		"outDir": "./build",
 		"paths": {
 			"@/*": [

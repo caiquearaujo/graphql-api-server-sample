@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 
 import http from 'http';
 import helmet from 'helmet';
+import nocache from 'nocache';
 import rateLimit from 'express-rate-limit';
 import logger from 'morgan';
 import createError from 'http-errors';
@@ -68,6 +69,7 @@ export class ApiServer {
 	protected init() {
 		this.app.enable('trust proxy');
 		this.app.use(helmet());
+		this.app.use(nocache());
 		this.app.use(logger('dev'));
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));

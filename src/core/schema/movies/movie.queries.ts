@@ -1,5 +1,5 @@
 import MoviesRepo from '@/core/repo/movies.repo';
-import { GraphQLInt, GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull } from 'graphql';
 import { MovieType } from './movie.types';
 
 const MovieQueries = {
@@ -13,7 +13,7 @@ const MovieQueries = {
 		type: MovieType,
 		args: {
 			id: {
-				type: new GraphQLNonNull(GraphQLInt),
+				type: new GraphQLNonNull(GraphQLID),
 			},
 		},
 		resolve: (_source: any, { id }: any) => {
